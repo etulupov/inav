@@ -21,6 +21,9 @@ tables:
   - name: pitot_hardware
     values: ["NONE", "AUTO", "MS4525", "ADC", "VIRTUAL", "FAKE"]
     enum: pitotSensor_e
+  - name: receiver_type
+    values: ["NONE", "PWM", "PPM", "SERIAL", "MSP", "SPI"]
+    enum: rxReceiverType_e
   - name: serial_rx
     values: ["SPEK1024", "SPEK2048", "SBUS", "SUMD", "SUMH", "XB-B", "XB-B-RJ01", "IBUS", "JETIEXBUS", "CRSF"]
   - name: rx_spi_protocol
@@ -69,6 +72,12 @@ tables:
   - name: aux_operator
     values: ["OR", "AND"]
     enum: modeActivationOperator_e
+  - name: osd_crosshairs_style
+    values: ["DEFAULT", "AIRCRAFT"]
+    enum: osd_crosshairs_style_e
+  - name: osd_sidebar_scroll
+    values: ["NONE", "ALTITUDE", "GROUND_SPEED", "HOME_DISTANCE"]
+    enum: osd_sidebar_scroll_e
 
 groups:
   - name: PG_GYRO_CONFIG
@@ -269,6 +278,9 @@ groups:
     type: rxConfig_t
     headers: ["rx/rx.h", "rx/spektrum.h"]
     members:
+      - name: receiver_type
+        field: receiverType
+        table: receiver_type
       - name: mid_rc
         field: midrc
         min: 1200
@@ -1315,6 +1327,25 @@ groups:
         min: 0
         max: 10000
 
+      - name: osd_artificial_horizon_reverse_roll
+        field: ahi_reverse_roll
+        type: bool
+      - name: osd_crosshairs_style
+        field: crosshairs_style
+        table: osd_crosshairs_style
+        type: uint8_t
+      - name: osd_left_sidebar_scroll
+        field: left_sidebar_scroll
+        table: osd_sidebar_scroll
+        type: uint8_t
+      - name: osd_right_sidebar_scroll
+        field: right_sidebar_scroll
+        table: osd_sidebar_scroll
+        type: uint8_t
+      - name: osd_sidebar_scroll_arrows
+        field: sidebar_scroll_arrows
+        type: bool
+
       - name: osd_main_voltage_pos
         field: item_pos[OSD_MAIN_BATT_VOLTAGE]
         min: 0
@@ -1427,6 +1458,18 @@ groups:
         max: OSD_POS_MAX_CLI
       - name: osd_messages_pos
         field: item_pos[OSD_MESSAGES]
+        max: OSD_POS_MAX_CLI
+      - name: osd_gps_hdop_pos
+        field: item_pos[OSD_GPS_HDOP]
+        max: OSD_POS_MAX_CLI
+      - name: osd_main_cell_voltage_pos
+        field: item_pos[OSD_MAIN_BATT_CELL_VOLTAGE]
+        max: OSD_POS_MAX_CLI
+      - name: osd_throttle_auto_thr_pos
+        field: item_pos[OSD_THROTTLE_POS_AUTO_THR]
+        max: OSD_POS_MAX_CLI
+      - name: osd_heading_graph_pos
+        field: item_pos[OSD_HEADING_GRAPH]
         max: OSD_POS_MAX_CLI
 
   - name: PG_SYSTEM_CONFIG
